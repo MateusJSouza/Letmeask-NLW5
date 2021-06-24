@@ -1,3 +1,4 @@
+// import { useContext } from 'react'
 import { Link } from 'react-router-dom';
 
 import illustrationImg from '../assets/images/illustration.svg'
@@ -5,16 +6,22 @@ import logoImg from '../assets/images/logo.svg';
 
 import '../styles/auth.scss';
 import '../styles/button.scss'
+
 import { Button } from '../components/Button';
+// import { useAuth } from '../hooks/useAuth';
+// import { AuthContext } from '../contexts/AuthContext';
 
 // webpack (snowpack, vite, ...)
 
 // Module Bundler -> 
 
 export function NewRoom() {
+  // const { user } = useAuth();
+
+
   return (
     <div id="page-auth">
-      <aside>
+      <aside>user
         <img src={illustrationImg} alt="Ilustração simbolizando perguntas e respostas" />
         <strong>Crie salas de Q&amp;A ao-vivo</strong>
         <p>Tire as dúvidas da sua audiência em tempo-real</p>
