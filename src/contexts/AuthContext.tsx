@@ -26,6 +26,7 @@ export function AuthContextProvider(props: AuthContextProviderProps ) {
 
   useEffect(() => {
     // event listener
+    // recuperar informação do usuário se ele já for um usuário autenticado
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
         const { displayName, photoURL, uid } = user
