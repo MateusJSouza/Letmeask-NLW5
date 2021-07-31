@@ -1,5 +1,7 @@
 // ReactNode -> qualquer conteúdo JSX
 import { ReactNode } from 'react';
+import cx from 'classnames';
+
 import './styles.scss';
 
 type QuestionProps = {
@@ -9,17 +11,29 @@ type QuestionProps = {
     avatar: string;
   },
   children?: ReactNode;
+  isAnswered?: boolean;
+  isHighLighted?: boolean;
 }
 
 export function Question({
   // Desestruturação, pegando somente o author e o content
   // sem precisar usar somente o (props: QuestionProps)
+  // por padrão, o valor iniciará como false em isAnswered e isHighlight
   content,
   author,
+  isAnswered = false,
+  isHighLighted = false,
   children
 }: QuestionProps) {
   return (
-    <div className="question">
+    // {nomeDaClasse: caso o bool for true = isAnswered}
+    <div
+    className={cx(
+      'question',
+      {answered: isAnswered},
+      {highlighted: isHighLighted && !isAnswered}
+    )}
+    >
       <p>{content}</p>
       <footer>
         <div className="user-info">
