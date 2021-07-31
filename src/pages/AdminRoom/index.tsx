@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 import logoImg from '../../assets/images/logo.svg'
 import deleteImg from '../../assets/images/delete.svg'
@@ -8,11 +8,9 @@ import { Question } from '../../components/Questions';
 import { RoomCode } from '../../components/RoomCode';
 // import { useAuth } from '../../hooks/useAuth';
 import { useRoom } from '../../hooks/useRoom';
+import { database } from '../../services/firebase';
 
 import  '../Room/styles.scss';
-import ReactModal from 'react-modal';
-import { useState } from 'react';
-import { database } from '../../services/firebase';
 
 // Declarando quais são os parâmetros que RoomParams recebe
 type RoomParams = {
@@ -20,6 +18,7 @@ type RoomParams = {
 }
 
 export function AdminRoom() {
+  const history = useHistory()
   // const { user } = useAuth()
   // <RoomParams> generic -> para a função saber quais parâmetros que essa rota vai receber
   const params = useParams<RoomParams>();
@@ -27,8 +26,13 @@ export function AdminRoom() {
   const roomId = params.id;
   const { title, questions } = useRoom(roomId);
 
-  // config do modal
-  const [showModal, setShowModal] = useState(false);
+  async function handleEndRoom() {
+    await database.ref(`rooms/${roomId}`).update({
+      endedAt: new Date(),
+    })
+
+    history.push('/')
+  }
 
   async function handleDeleteQuestion(questionId: string) {
     if (window.confirm('Tem certeza que você deseja excluir esta pergunta?')) {
@@ -43,7 +47,7 @@ export function AdminRoom() {
           <img src={logoImg} alt="Letmeask" />
           <div>
             <RoomCode code={roomId} />
-            <Button isOutlined>Encerrar sala</Button>
+            <Button isOutlined onClick={handleEndRoom}>Encerrar sala</Button>
           </div>
         </div>
       </header>
@@ -68,17 +72,10 @@ export function AdminRoom() {
               >
                 <button
                   type="button"
-                  onClick={() => showModal}
+                  onClick={() => {handleDeleteQuestion(question.id)}}
                 >
                   <img src={deleteImg} alt="Remover pergunta" />
                 </button>
-                <ReactModal
-                  isOpen={showModal}
-                  onRequestClose={() => setShowModal(false)}
-                >
-                  <p>Modal text!</p>
-                  <button onClick={() => setShowModal(false)}>Close Modal</button>
-                </ReactModal>
               </Question>
             )
           })}
